@@ -24,5 +24,6 @@ public class TestDataLoader implements CommandLineRunner{
                 .build();
 
         productRepository.save(product);
+        System.out.println(product);
     }
 }
