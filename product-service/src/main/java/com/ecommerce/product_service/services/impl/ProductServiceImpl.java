@@ -29,8 +29,28 @@ public class ProductServiceImpl implements ProductService{
 
     @Override
     public List<ProductResponseDTO> getAllsProducts() {
+        return repository.findAll()
+                .stream()
+                .map(mapper::toProductResponseDTO)
+                .toList();
+    }
+
+    @Override
+    public ProductResponseDTO getProductById(String id) {
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getAllsProducts'");
+        throw new UnsupportedOperationException("Unimplemented method 'getProductById'");
+    }
+
+    @Override
+    public ProductResponseDTO updateProduct(String id, ProductRequestDTO productRequest) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'updateProduct'");
+    }
+
+    @Override
+    public void deteleProduct(String id) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'deteleProduct'");
     }
 
 }
