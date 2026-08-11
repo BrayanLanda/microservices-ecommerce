@@ -37,14 +37,20 @@ public class ProductServiceImpl implements ProductService{
 
     @Override
     public ProductResponseDTO getProductById(String id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getProductById'");
+        Product product = repository.findById(id).orElseThrow(
+            () -> new RuntimeException("Product not found " + id)
+        );
+        return mapper.toProductResponseDTO(product);
     }
 
     @Override
     public ProductResponseDTO updateProduct(String id, ProductRequestDTO productRequest) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'updateProduct'");
+        Product product = repository.findById(id).orElseThrow(
+            () -> new RuntimeException("Product not found " + id)
+        );
+        mapper.updateProductFromRequest(productRequest, product);
+        Product updateProduct = repository.save(product);
+        return mapper.toProductResponseDTO(updateProduct);
     }
 
     @Override

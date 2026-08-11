@@ -2,6 +2,7 @@ package com.ecommerce.product_service.mapper;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 
 import com.ecommerce.product_service.dtos.ProductRequestDTO;
 import com.ecommerce.product_service.dtos.ProductResponseDTO;
@@ -13,4 +14,7 @@ public interface ProductMapper {
     Product toProduct(ProductRequestDTO requestDTO);
 
     ProductResponseDTO toProductResponseDTO(Product product);
+
+    @Mapping(target = "id", ignore = true)
+    void updateProductFromRequest(ProductRequestDTO productRequest, @MappingTarget Product product);
 }   
