@@ -16,8 +16,11 @@ import com.ecommerce.product_service.dtos.ProductRequestDTO;
 import com.ecommerce.product_service.dtos.ProductResponseDTO;
 import com.ecommerce.product_service.services.ProductService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 
 @RestController
@@ -28,7 +31,7 @@ public class ProductController {
     
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public ProductResponseDTO createProduct(@RequestBody ProductRequestDTO productRequestDTO){
+    public ProductResponseDTO createProduct(@RequestBody @Valid ProductRequestDTO productRequestDTO){
         return productService.createProduct(productRequestDTO);
     }
 
@@ -51,8 +54,14 @@ public class ProductController {
 
     @PutMapping("path/{id}")
     @ResponseStatus(HttpStatus.OK)
-    public ProductResponseDTO updateProduct(@PathVariable String id, @RequestBody ProductRequestDTO productRequestDTO) {
+    public ProductResponseDTO updateProduct(@PathVariable @Valid String id, @RequestBody ProductRequestDTO productRequestDTO) {
         return productService.updateProduct(id,productRequestDTO);
     }
+
+    @GetMapping("/test-fail")
+    public void testFail() {
+        throw new RuntimeException("Boooooom");
+    }
+    
     
 }

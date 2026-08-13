@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.ecommerce.product_service.dtos.ProductRequestDTO;
 import com.ecommerce.product_service.dtos.ProductResponseDTO;
+import com.ecommerce.product_service.exception.ResourceNotFoundException;
 import com.ecommerce.product_service.mapper.ProductMapper;
 import com.ecommerce.product_service.models.Product;
 import com.ecommerce.product_service.repositories.ProductRepository;
@@ -38,7 +39,7 @@ public class ProductServiceImpl implements ProductService{
     @Override
     public ProductResponseDTO getProductById(String id) {
         Product product = repository.findById(id).orElseThrow(
-            () -> new RuntimeException("Product not found " + id)
+            () -> new ResourceNotFoundException("Product", "id", id)
         );
         return mapper.toProductResponseDTO(product);
     }
@@ -46,7 +47,7 @@ public class ProductServiceImpl implements ProductService{
     @Override
     public ProductResponseDTO updateProduct(String id, ProductRequestDTO productRequest) {
         Product product = repository.findById(id).orElseThrow(
-            () -> new RuntimeException("Product not found " + id)
+            () -> new ResourceNotFoundException("Product", "id", id)
         );
         mapper.updateProductFromRequest(productRequest, product);
         Product updateProduct = repository.save(product);
@@ -56,7 +57,7 @@ public class ProductServiceImpl implements ProductService{
     @Override
     public void deteleProduct(String id) {
         if(!repository.existsById(id))
-            throw new RuntimeException("Product not found " + id);
+            throw new ResourceNotFoundException("Product", "id", id);
 
         repository.deleteById(id);
     }
