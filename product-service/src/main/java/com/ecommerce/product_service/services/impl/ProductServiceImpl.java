@@ -23,8 +23,8 @@ public class ProductServiceImpl implements ProductService{
     @Override
     public ProductResponseDTO createProduct(ProductRequestDTO requestDTO) {
         Product product = mapper.toProduct(requestDTO);
-        repository.save(product);
-        return mapper.toProductResponseDTO(product);
+        Product savedProduct = repository.save(product);
+        return mapper.toProductResponseDTO(savedProduct);
     }
 
     @Override
@@ -55,8 +55,10 @@ public class ProductServiceImpl implements ProductService{
 
     @Override
     public void deteleProduct(String id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'deteleProduct'");
+        if(!repository.existsById(id))
+            throw new RuntimeException("Product not found " + id);
+
+        repository.deleteById(id);
     }
 
 }
