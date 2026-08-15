@@ -10,11 +10,12 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=password
     volumes:
       - mongo_data:/data/db  # <--- ¡Aquí salvamos los datos!
+
   inventory-db:
     image: mysql:8
     container_name: inventory-db
     ports:
-      - "3306:3306"
+      - "3307:3306"
     environment:
       MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: inventory-db
@@ -36,5 +37,5 @@ services:
 
 volumes:
   mongo_data:   
-  inventor_data: 
+  inventory_data: 
   order_data:
