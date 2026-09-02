@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import com.ecommerce.order_service.dtos.OrderRequest;
 import com.ecommerce.order_service.dtos.OrderResponse;
@@ -23,12 +24,27 @@ import lombok.extern.slf4j.Slf4j;
 public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final OrderMapper orderMapper;
+    private final WebClient.Builder webClientBuilder;
 
     @Override
     @Transactional
     public OrderResponse placeOrder(OrderRequest orderRequest) {
         log.info("Placing a new order");
         Order order = orderMapper.toOrder(orderRequest);
+        for (var item : order.getOrderLineItemsList()) {
+            String sku = item.getSku();
+            Integer quantity = item.getQuantity();
+
+            Boolean inStock = webClientBuilder.build().get()
+                    .uri("http://localhost:8082/api/inventory" + sku,
+                            uriBuilder -> uriBuilder.queryParam("quantity", quantity).build())
+                    .retrieve()
+                    .bodyToMono(Boolean.class)
+                    .block();
+            if (!Boolean.TRUE.equals(inStock)) {
+                throw new RuntimeException("Product " + sku + " is not in stock");
+            }
+        }
         order.setOrderNumber(UUID.randomUUID().toString());
         Order savedOrder = orderRepository.save(order);
         log.info("Order saved successfully. Id {}", savedOrder.getId());
