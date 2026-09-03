@@ -79,4 +79,19 @@ public class InventoryServiceImpl implements InventoryService {
         log.info("Inventory deleted: {}", id);
     }
 
+    @Override
+    @Transactional
+    public void reduceStock(String sku, Integer quantity) {
+        var inventory = inventoryRepository.findBySku(sku)
+                .orElseThrow(
+                        () -> new RuntimeException("Inventory not found " + sku));
+
+        if (inventory.getQuantity() < quantity) {
+            throw new RuntimeException("Insufficient stock");
+        }
+        inventory.setQuantity(inventory.getQuantity() - quantity);
+        inventoryRepository.save(inventory);
+
+    }
+
 }

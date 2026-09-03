@@ -36,7 +36,7 @@ public class OrderServiceImpl implements OrderService {
             Integer quantity = item.getQuantity();
 
             Boolean inStock = webClientBuilder.build().get()
-                    .uri("http://localhost:8082/api/inventory" + sku,
+                    .uri("http://localhost:8082/api/v1/inventory/" + sku,
                             uriBuilder -> uriBuilder.queryParam("quantity", quantity).build())
                     .retrieve()
                     .bodyToMono(Boolean.class)
@@ -77,5 +77,4 @@ public class OrderServiceImpl implements OrderService {
         orderRepository.deleteById(id);
         log.info("Order deleted successfully. Id {}", id);
     }
-
 }
