@@ -35,14 +35,16 @@ public class OrderServiceImpl implements OrderService {
             String sku = item.getSku();
             Integer quantity = item.getQuantity();
 
-            Boolean inStock = webClientBuilder.build().get()
-                    .uri("http://localhost:8082/api/v1/inventory/" + sku,
+            try {
+               webClientBuilder.build().put()
+                    .uri("http://localhost:8082/api/v1/inventory/reduce/" + sku,
                             uriBuilder -> uriBuilder.queryParam("quantity", quantity).build())
                     .retrieve()
                     .bodyToMono(Boolean.class)
                     .block();
-            if (!Boolean.TRUE.equals(inStock)) {
-                throw new RuntimeException("Product " + sku + " is not in stock");
+            } catch (Exception e) {
+                log.error("Error checking inventory for SKU {}: {}", sku, e.getMessage());
+                throw new RuntimeException("Error checking inventory for SKU " + sku, e);
             }
         }
         order.setOrderNumber(UUID.randomUUID().toString());

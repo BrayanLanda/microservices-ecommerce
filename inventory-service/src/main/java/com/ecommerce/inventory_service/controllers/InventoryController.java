@@ -53,7 +53,7 @@ public class InventoryController {
         return inventoryService.updateInventory(id, inventoryRequest);
     }
 
-    @PostMapping("/reduce/{sku}")
+    @PutMapping("/reduce/{sku}")
     @ResponseStatus(HttpStatus.OK)
     public String reduceStock(@PathVariable("sku") String sku, @RequestParam("quantity") Integer quantity) {
         inventoryService.reduceStock(sku, quantity);
