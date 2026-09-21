@@ -14,6 +14,7 @@ import com.ecommerce.order_service.mappers.OrderMapper;
 import com.ecommerce.order_service.models.Order;
 import com.ecommerce.order_service.repositories.OrderRepository;
 import com.ecommerce.order_service.services.OrderService;
+import com.ecommerce.order_service.services.client.InventoryClient;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,7 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final OrderMapper orderMapper;
-    private final WebClient.Builder webClientBuilder;
+    private final InventoryClient inventoryClient;
 
     @Override
     @Transactional
@@ -36,12 +37,13 @@ public class OrderServiceImpl implements OrderService {
             Integer quantity = item.getQuantity();
 
             try {
-               webClientBuilder.build().put()
-                    .uri("http://localhost:8082/api/v1/inventory/reduce/" + sku,
-                            uriBuilder -> uriBuilder.queryParam("quantity", quantity).build())
-                    .retrieve()
-                    .bodyToMono(Boolean.class)
-                    .block();
+                // webClientBuilder.build().put()
+                // .uri("http://localhost:8082/api/v1/inventory/reduce/" + sku,
+                // uriBuilder -> uriBuilder.queryParam("quantity", quantity).build())
+                // .retrieve()
+                // .bodyToMono(Boolean.class)
+                // .block();
+                inventoryClient.reduceStock(sku, quantity);
             } catch (Exception e) {
                 log.error("Error checking inventory for SKU {}: {}", sku, e.getMessage());
                 throw new RuntimeException("Error checking inventory for SKU " + sku, e);
