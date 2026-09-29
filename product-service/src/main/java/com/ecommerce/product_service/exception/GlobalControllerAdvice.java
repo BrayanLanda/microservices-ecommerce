@@ -35,6 +35,7 @@ public class GlobalControllerAdvice {
         return problemDetail;
     }
 
+    //Test
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ProblemDetail handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
         ProblemDetail problemDetail = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST,
